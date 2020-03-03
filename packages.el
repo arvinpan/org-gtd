@@ -78,10 +78,23 @@
 
   (setq org-agenda-span 'day)
 
-  (if (boundp 'org-user-agenda-files)
-      (setq org-agenda-files org-user-agenda-files)
-    (setq org-agenda-files (quote ("~/git/org"))))
-  ;; (setq org-agenda-files (list gtd-base-path))
+  ;; (if (boundp 'org-user-agenda-files)
+  ;;     (setq org-agenda-files org-user-agenda-files)
+  ;;   (setq org-agenda-files (quote ("~/git/org"))))
+  ;; ;; (setq org-agenda-files (list gtd-base-path))
+  ;; (setq org-agenda-files (quote ("~/git/org/")))
+  ;; (setq org-agenda-files (list gtd-base-path "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org"))
+  (setq org-agenda-files (list gtd-base-path))
+  ;; need to load find-lisp, (setq org-agenda-files (find-lisp-find-files gtd-base-path "TODOs.org"))
+  ;; (setq org-agenda-file-regexp "\\`[^.].*ODOs\\.org\\'")
+  ;; (setq org-agenda-file-regexp "\\`TODOs\\.org\\'")
+  ;; ;; https://www.reddit.com/r/orgmode/comments/6q6cdk/adding_files_to_the_agenda_list_recursively/
+  ;; (setq org-agenda-files (apply 'append
+  ;;                               (mapcar
+  ;;                                (lambda (directory)
+  ;;                                 (directory-files-recursively
+  ;;                                  directory org-agenda-file-regexp))
+  ;;                                `(,gtd-base-path "~/Documents/org"))))  ;; support multiple directory
 
   ;; Do not dim blocked tasks
   (setq org-agenda-dim-blocked-tasks nil)
@@ -98,7 +111,7 @@
                  ((org-agenda-overriding-header "Habits")
                   (org-agenda-sorting-strategy
                    '(todo-state-down effort-up category-keep))))
-                (" " "Agenda"
+                ("A" "Agenda"
                  ((agenda "" nil)
                   (tags "REFILE"
                         ((org-agenda-overriding-header "Tasks to Refile")
@@ -566,7 +579,12 @@ so change the default 'F' binding in the agenda to allow both"
           ("p" "Phone call" entry (file ,(concat gtd-base-path "refile.org"))
            "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
           ("h" "Habit" entry (file ,(concat gtd-base-path "refile.org"))
-           "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")))
+           "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
+          ("P" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+          ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+           "* %? [[%:link][%:description]] \nCaptured On: %U")
+        ))
 
   ;; Remove empty LOGBOOK drawers on clock out
   (defun bh/remove-empty-drawer-on-clock-out ()
